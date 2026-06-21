@@ -9,6 +9,8 @@ app.secret_key = 'copel-despacho-2026-secretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///copel.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
+
 db.init_app(app)
 
 
