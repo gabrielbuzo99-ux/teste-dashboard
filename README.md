@@ -40,10 +40,6 @@ Acesse em: **http://localhost:5000**
 
 ## Credenciais de Acesso
 
-| Usuário    | Senha      | Perfil    |
-|-----------|------------|-----------|
-| `admin`   | `admin123` | Admin     |
-| `operador`| `copel2026`| Operador  |
 
 ## Tecnologias
 
