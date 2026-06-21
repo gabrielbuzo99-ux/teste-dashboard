@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Equipes de Campo — Copel Despacho{% endblock %}
+{% block page_title %}Equipes de Campo{% endblock %}
+
+{% block content %}
+<div class="kpi-grid kpi-mini">
+    <div class="kpi-card kpi-green">
+        <div class="kpi-label">Em Campo</div>
+        <div class="kpi-value">{{ em_campo }}</div>
+    </div>
+    <div class="kpi-card kpi-blue">
+        <div class="kpi-label">Disponíveis</div>
+        <div class="kpi-value">{{ disponivel }}</div>
+    </div>
+    <div class="kpi-card kpi-yellow">
+        <div class="kpi-label">Em Pausa</div>
+        <div class="kpi-value">{{ em_pausa }}</div>
+    </div>
+    <div class="kpi-card" style="background:rgba(107,114,128,.12); border-color:#6b7280">
+        <div class="kpi-label">Indisponíveis</div>
+        <div class="kpi-value" style="color:#9ca3af">{{ indisponivel }}</div>
+    </div>
+</div>
+
+<div class="filter-bar">
+    <form method="GET" action="{{ url_for('equipes') }}" class="filter-form">
+        <div class="filter-group">
+            <label>Regional</label>
+            <select name="regional_id" onchange="this.form.submit()">
+                <option value="">Todas</option>
+                {% for r in regionais %}
+                <option value="{{ r.id }}" {% if regional_id == r.id %}selected{% endif %}>{{ r.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>BSC</label>
+            <select name="bsc_id" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                {% for b in bscs %}
+                <option value="{{ b.id }}" {% if bsc_id == b.id %}selected{% endif %}>{{ b.codigo }} — {{ b.municipio }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Status</label>
+            <select name="status" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="EM_CAMPO" {% if status_f == 'EM_CAMPO' %}selected{% endif %}>Em Campo</option>
+                <option value="DISPONIVEL" {% if status_f == 'DISPONIVEL' %}selected{% endif %}>Disponível</option>
+                <option value="EM_PAUSA" {% if status_f == 'EM_PAUSA' %}selected{% endif %}>Em Pausa</option>
+                <option value="INDISPONIVEL" {% if status_f == 'INDISPONIVEL' %}selected{% endif %}>Indisponível</option>
+            </select>
+        </div>
+        <a href="{{ url_for('equipes') }}" class="btn-clear">Limpar filtros</a>
+    </form>
+</div>
+
+<div class="card">
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome da Equipe</th>
+                    <th>BSC</th>
+                    <th>Município</th>
+                    <th>Regional</th>
+                    <th>Especialidade</th>
+                    <th>Técnicos</th>
+                    <th>Veículo</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for eq in equipes.items %}
+                <tr>
+                    <td><code class="proto">{{ eq.codigo }}</code></td>
+                    <td>{{ eq.nome }}</td>
+                    <td>{{ eq.bsc.codigo }}</td>
+                    <td>{{ eq.bsc.municipio }}</td>
+                    <td>{{ eq.bsc.regional.nome }}</td>
+                    <td>
+                        <span class="esp-badge esp-{{ eq.especialidade|lower }}">{{ eq.especialidade }}</span>
+                    </td>
+                    <td class="center">{{ eq.n_tecnicos }}</td>
+                    <td class="mono">{{ eq.veiculo or '—' }}</td>
+                    <td>
+                        <span class="status-tag eq-{{ eq.status|lower }}">{{ eq.status|replace('_',' ') }}</span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="9" class="empty">Nenhuma equipe encontrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        {% if equipes.has_prev %}
+        <a href="{{ url_for('equipes', page=equipes.prev_num, regional_id=regional_id, bsc_id=bsc_id, status=status_f) }}" class="page-btn">← Anterior</a>
+        {% endif %}
+        <span class="page-info">Página {{ equipes.page }} de {{ equipes.pages }}</span>
+        {% if equipes.has_next %}
+        <a href="{{ url_for('equipes', page=equipes.next_num, regional_id=regional_id, bsc_id=bsc_id, status=status_f) }}" class="page-btn">Próxima →</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

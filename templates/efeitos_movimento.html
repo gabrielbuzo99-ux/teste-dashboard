@@ -1,0 +1,662 @@
+{% extends 'base.html' %}
+{% block title %}Efeitos de Movimento — Copel Despacho{% endblock %}
+{% block page_title %}Efeitos de Movimento CSS + JS{% endblock %}
+{% block page_meta %}<span class="badge-date">15 efeitos demonstrados</span>{% endblock %}
+
+{% block content %}
+<style>
+/* shared demo shell */
+.mdemo { width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; }
+
+/* ══ 1. PARALLAX SCROLLING ══ */
+.parallax-wrap { width:100%; height:180px; overflow:hidden; position:relative; border-radius:10px; }
+.parallax-layer { position:absolute; inset:0; background: linear-gradient(135deg,#1a1a2e,#16213e); }
+.parallax-stars { position:absolute; inset:0; background-image:radial-gradient(2px 2px at 10% 20%, #fff 0, transparent 0),radial-gradient(2px 2px at 30% 60%, #fff 0, transparent 0),radial-gradient(1px 1px at 50% 40%, #adf 0, transparent 0),radial-gradient(2px 2px at 70% 10%, #fff 0, transparent 0),radial-gradient(1px 1px at 85% 70%, #adf 0, transparent 0),radial-gradient(2px 2px at 90% 30%, #fff 0, transparent 0); transition: transform .1s ease-out; }
+.parallax-mountains { position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(to top,#0f3460,transparent); clip-path:polygon(0 100%,0 60%,10% 30%,20% 50%,30% 20%,40% 45%,50% 10%,60% 40%,70% 25%,80% 50%,90% 35%,100% 55%,100% 100%); transition: transform .1s ease-out; }
+.parallax-ground { position:absolute; bottom:0; left:0; right:0; height:40px; background:#0a1628; }
+.parallax-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-weight:700; font-size:14px; letter-spacing:.1em; text-shadow:0 0 20px rgba(0,191,255,.8); transition: transform .1s ease-out; z-index:2; white-space:nowrap; }
+
+/* ══ 2. SMOOTH SCROLL ══ */
+.smooth-demo { height:180px; overflow-y:auto; scroll-behavior:smooth; border-radius:10px; background:var(--bg3); }
+.smooth-demo::-webkit-scrollbar { width:4px; }
+.smooth-demo::-webkit-scrollbar-thumb { background:var(--blue); border-radius:2px; }
+.smooth-section { height:120px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; letter-spacing:.08em; }
+.smooth-section:nth-child(1){background:linear-gradient(135deg,#1e3a5f,#0f2744);color:#60a5fa;}
+.smooth-section:nth-child(2){background:linear-gradient(135deg,#1a0a3a,#2d1458);color:#c084fc;}
+.smooth-section:nth-child(3){background:linear-gradient(135deg,#0a2a1a,#0f4024);color:#34d399;}
+.smooth-btn-row { display:flex; gap:8px; margin-top:8px; justify-content:center; }
+.smooth-nav { padding:6px 14px; border-radius:6px; border:1px solid var(--border2); background:var(--bg3); color:var(--text2); font-size:12px; cursor:pointer; font-family:var(--font); transition:background .15s,color .15s; }
+.smooth-nav:hover { background:var(--blue-dim); color:var(--blue); border-color:rgba(59,130,246,.3); }
+
+/* ══ 3. REVEAL ANIMATION ══ */
+.reveal-container { display:flex; flex-direction:column; gap:8px; width:90%; }
+.reveal-item {
+  padding: 10px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--text2);
+  font-size: 12px; font-weight:500;
+  transform: translateX(-40px);
+  opacity: 0;
+  transition: transform .5s cubic-bezier(.25,1,.5,1), opacity .5s;
+}
+.reveal-item.revealed { transform: translateX(0); opacity: 1; }
+
+/* ══ 4. FADE IN/OUT ══ */
+.fade-box {
+  width: 120px; height: 80px;
+  background: linear-gradient(135deg,#3b82f6,#8b5cf6);
+  border-radius: 12px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-weight:700; font-size:14px;
+  transition: opacity .6s ease;
+}
+
+/* ══ 5. SLIDE IN ══ */
+.slide-cards { display:flex; flex-direction:column; gap:8px; width:90%; overflow:hidden; }
+.slide-card {
+  padding:10px 16px;
+  background:var(--bg2); border:1px solid var(--border2); border-radius:8px;
+  color:var(--text); font-size:12px; font-weight:600;
+  transform:translateX(-200px);
+  opacity:0;
+  transition: transform .5s cubic-bezier(.25,1,.5,1), opacity .5s;
+}
+.slide-card.slid { transform:translateX(0); opacity:1; }
+
+/* ══ 6. SCALE ANIMATION ══ */
+.scale-dots { display:flex; gap:14px; }
+.scale-dot {
+  width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+  animation: scale-pulse-dot 1.8s ease-in-out infinite;
+}
+.scale-dot:nth-child(1){background:#3b82f6;animation-delay:0s;}
+.scale-dot:nth-child(2){background:#8b5cf6;animation-delay:.3s;}
+.scale-dot:nth-child(3){background:#ec4899;animation-delay:.6s;}
+.scale-dot:nth-child(4){background:#14b8a6;animation-delay:.9s;}
+@keyframes scale-pulse-dot {
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.35);}
+}
+
+/* ══ 7. BOUNCE ANIMATION ══ */
+.bounce-balls { display:flex; gap:16px; align-items:flex-end; height:80px; }
+.bounce-ball {
+  width:28px; height:28px; border-radius:50%;
+  animation: bounce-up 1.2s cubic-bezier(.28,.84,.42,1) infinite;
+}
+.bounce-ball:nth-child(1){background:#f97316;animation-delay:0s;}
+.bounce-ball:nth-child(2){background:#eab308;animation-delay:.15s;}
+.bounce-ball:nth-child(3){background:#22c55e;animation-delay:.30s;}
+.bounce-ball:nth-child(4){background:#3b82f6;animation-delay:.45s;}
+.bounce-ball:nth-child(5){background:#a855f7;animation-delay:.60s;}
+@keyframes bounce-up {
+  0%,100%{transform:translateY(0);}
+  40%{transform:translateY(-50px);}
+  60%{transform:translateY(-50px);}
+}
+
+/* ══ 8. FLOATING ANIMATION ══ */
+.float-items { display:flex; gap:20px; }
+.float-card {
+  padding:14px 20px; border-radius:14px;
+  text-align:center; font-size:12px; font-weight:600; color:#fff;
+}
+.float-card:nth-child(1){background:linear-gradient(135deg,#667eea,#764ba2);animation:float1 3s ease-in-out infinite;}
+.float-card:nth-child(2){background:linear-gradient(135deg,#f093fb,#f5576c);animation:float1 3s ease-in-out infinite .5s;}
+.float-card:nth-child(3){background:linear-gradient(135deg,#4facfe,#00f2fe);animation:float1 3s ease-in-out infinite 1s;}
+@keyframes float1 {
+  0%,100%{transform:translateY(0) rotate(-1deg);}
+  50%{transform:translateY(-12px) rotate(1deg);}
+}
+
+/* ══ 9. PULSE EFFECT ══ */
+.pulse-items { display:flex; gap:24px; align-items:center; }
+.pulse-ring {
+  width:60px; height:60px; border-radius:50%;
+  position:relative; display:flex; align-items:center; justify-content:center;
+}
+.pulse-ring::before,.pulse-ring::after {
+  content:'';
+  position:absolute; inset:0; border-radius:50%;
+  animation:pulse-expand 2s ease-out infinite;
+}
+.pulse-ring::after { animation-delay:.7s; }
+.pulse-ring.pr-green { background:#22c55e; }
+.pulse-ring.pr-green::before,.pulse-ring.pr-green::after { background:rgba(34,197,94,.4); }
+.pulse-ring.pr-red   { background:#ef4444; }
+.pulse-ring.pr-red::before,.pulse-ring.pr-red::after { background:rgba(239,68,68,.4); }
+.pulse-ring.pr-blue  { background:#3b82f6; }
+.pulse-ring.pr-blue::before,.pulse-ring.pr-blue::after { background:rgba(59,130,246,.4); }
+@keyframes pulse-expand {
+  to { transform:scale(2); opacity:0; }
+}
+.pulse-icon { font-size:20px; position:relative; z-index:1; }
+
+/* ══ 10. RIPPLE EFFECT ══ */
+.ripple-btn {
+  padding: 14px 32px;
+  background: linear-gradient(135deg,#3b82f6,#8b5cf6);
+  border: none; border-radius: 8px;
+  color: #fff; font-weight:700; font-size:14px; font-family:var(--font);
+  cursor: pointer; position:relative; overflow:hidden;
+  transition: transform .1s;
+}
+.ripple-btn:active { transform:scale(.97); }
+.ripple-wave {
+  position:absolute; border-radius:50%;
+  background:rgba(255,255,255,.35);
+  transform:scale(0);
+  animation:ripple-go .6s linear;
+  pointer-events:none;
+}
+@keyframes ripple-go {
+  to { transform:scale(4); opacity:0; }
+}
+
+/* ══ 11. MAGNETIC BUTTON ══ */
+.magnetic-btn {
+  padding:14px 28px;
+  background: linear-gradient(135deg,#f97316,#ec4899);
+  border:none; border-radius:50px;
+  color:#fff; font-weight:700; font-size:14px; font-family:var(--font);
+  cursor:pointer;
+  transition:transform .2s cubic-bezier(.25,1,.5,1), box-shadow .2s;
+  display:inline-block;
+  box-shadow:0 6px 30px rgba(249,115,22,.3);
+}
+.magnetic-btn:hover { box-shadow:0 12px 40px rgba(249,115,22,.5); }
+
+/* ══ 12. CURSOR TRAIL ══ */
+.cursor-trail-demo {
+  width:100%; height:180px; border-radius:10px;
+  background:radial-gradient(ellipse at 50% 50%, #1e0a3a, #0a0a14);
+  cursor:crosshair; position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.cursor-trail-demo .ct-hint { color:rgba(255,255,255,.3); font-size:12px; pointer-events:none; user-select:none; }
+.trail-dot { position:absolute; border-radius:50%; pointer-events:none; transform:translate(-50%,-50%); animation:trail-fade .6s forwards; }
+@keyframes trail-fade { to { transform:translate(-50%,-50%) scale(0); opacity:0; } }
+
+/* ══ 13. PARTICLE SYSTEM ══ */
+.particle-canvas { width:100%; height:180px; display:block; border-radius:10px; background:#050510; }
+
+/* ══ 14. MOUSE FOLLOW ══ */
+.mouse-follow-demo {
+  width:100%; height:180px; border-radius:10px;
+  background:linear-gradient(135deg,#0a0e17,#0f1623);
+  cursor:none; position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.mouse-cursor { position:absolute; pointer-events:none; transition:transform .08s; }
+.cursor-outer { width:40px; height:40px; border:2px solid rgba(59,130,246,.7); border-radius:50%; transform:translate(-50%,-50%); transition:width .2s,height .2s,border-color .2s; }
+.cursor-inner { width:8px; height:8px; background:#3b82f6; border-radius:50%; transform:translate(-50%,-50%); position:absolute; }
+.mf-hint { color:rgba(255,255,255,.25); font-size:12px; }
+.mf-magnet { position:absolute; width:50px; height:50px; border-radius:14px; display:flex;align-items:center;justify-content:center;font-size:24px; background:rgba(59,130,246,.15); border:1px solid rgba(59,130,246,.3); transition:transform .15s,background .15s; }
+
+/* ══ 15. INFINITE MARQUEE ══ */
+.marquee-wrapper { width:100%; overflow:hidden; position:relative; }
+.marquee-wrapper::before,.marquee-wrapper::after {
+  content:''; position:absolute; top:0; bottom:0; width:60px; z-index:2; pointer-events:none;
+}
+.marquee-wrapper::before { left:0; background:linear-gradient(to right,var(--bg2),transparent); }
+.marquee-wrapper::after  { right:0; background:linear-gradient(to left,var(--bg2),transparent); }
+.marquee-track { display:flex; gap:0; animation:marquee-scroll 18s linear infinite; width:max-content; }
+.marquee-track:hover { animation-play-state:paused; }
+.marquee-item {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 20px;
+  white-space:nowrap; font-size:13px; font-weight:600; color:var(--text2);
+}
+.marquee-item .mi-dot { width:6px; height:6px; border-radius:50%; background:var(--blue); }
+.marquee-track-2 { animation:marquee-scroll-rev 14s linear infinite; }
+.marquee-item-2 {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 16px;
+  white-space:nowrap; font-size:12px; font-weight:500; color:var(--text3);
+}
+.marquee-item-2 .mi-dot-2 { width:5px; height:5px; border-radius:50%; }
+@keyframes marquee-scroll     { to { transform:translateX(-50%); } }
+@keyframes marquee-scroll-rev { to { transform:translateX(50%); } }
+</style>
+
+<!-- WRAPPER DEMO SECTIONS — override effects-grid para layout distinto -->
+<div class="effects-grid">
+
+  <!-- 1. PARALLAX -->
+  <div class="effect-card" style="grid-column:span 2">
+    <div class="effect-demo" style="padding:0;display:block">
+      <div class="parallax-wrap" id="parallax-wrap">
+        <div class="parallax-layer"></div>
+        <div class="parallax-stars" id="p-stars"></div>
+        <div class="parallax-mountains" id="p-mountains"></div>
+        <div class="parallax-ground"></div>
+        <div class="parallax-text" id="p-text">⚡ MOVA O MOUSE SOBRE AQUI ⚡</div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Parallax Scrolling</div>
+      <div class="effect-desc">Camadas se movem em velocidades diferentes ao mover o mouse, criando profundidade tridimensional via <code>transform: translateX/Y()</code>.</div>
+      <span class="effect-tag">CSS transform + JS mousemove</span>
+    </div>
+  </div>
+
+  <!-- 2. SMOOTH SCROLL -->
+  <div class="effect-card">
+    <div class="effect-demo" style="flex-direction:column;gap:8px;padding:12px">
+      <div class="smooth-demo" id="smooth-demo">
+        <div class="smooth-section">🗺️ CURITIBA</div>
+        <div class="smooth-section">⚡ LONDRINA</div>
+        <div class="smooth-section">🌊 CASCAVEL</div>
+      </div>
+      <div class="smooth-btn-row">
+        <button class="smooth-nav" onclick="smoothGo(0)">CWB</button>
+        <button class="smooth-nav" onclick="smoothGo(1)">LON</button>
+        <button class="smooth-nav" onclick="smoothGo(2)">CAS</button>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Smooth Scroll</div>
+      <div class="effect-desc">Rolagem suave via <code>scroll-behavior: smooth</code> + <code>scrollTo()</code> com posição calculada.</div>
+      <span class="effect-tag">CSS + JS</span>
+    </div>
+  </div>
+
+  <!-- 3. REVEAL ANIMATION -->
+  <div class="effect-card">
+    <div class="effect-demo">
+      <div class="reveal-container" id="reveal-container">
+        <div class="reveal-item">🔌 Regional Curitiba · 8 BSCs</div>
+        <div class="reveal-item">⚡ Regional Norte · 8 BSCs</div>
+        <div class="reveal-item">🌊 Regional Oeste · 8 BSCs</div>
+        <div class="reveal-item">🏔 Regional Sul · 8 BSCs</div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Reveal Animation</div>
+      <div class="effect-desc">Elementos entram em cascata ao aparecer na tela via <code>IntersectionObserver</code> com <code>transition-delay</code> escalonado.</div>
+      <span class="effect-tag">CSS transition + JS IntersectionObserver</span>
+    </div>
+  </div>
+
+  <!-- 4. FADE IN/OUT -->
+  <div class="effect-card">
+    <div class="effect-demo" style="flex-direction:column;gap:14px">
+      <div class="fade-box" id="fade-box">⚡ FADE</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="document.getElementById('fade-box').style.opacity='0'" class="smooth-nav">Fade Out</button>
+        <button onclick="document.getElementById('fade-box').style.opacity='1'" class="smooth-nav">Fade In</button>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Fade In / Fade Out</div>
+      <div class="effect-desc">Transição de <code>opacity: 0 → 1</code> com <code>transition: opacity .6s ease</code>.</div>
+      <span class="effect-tag">CSS transition</span>
+    </div>
+  </div>
+
+  <!-- 5. SLIDE IN -->
+  <div class="effect-card">
+    <div class="effect-demo">
+      <div class="slide-cards" id="slide-cards">
+        <div class="slide-card">📋 1.500 serviços comerciais</div>
+        <div class="slide-card">🚨 500 emergências abertas</div>
+        <div class="slide-card">🚗 690 equipes em campo</div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Slide In</div>
+      <div class="effect-desc">Entrada lateral via <code>translateX(-200px) → 0</code> com <code>cubic-bezier(.25,1,.5,1)</code> e delay escalonado.</div>
+      <span class="effect-tag">CSS transition</span>
+    </div>
+  </div>
+
+  <!-- 6. SCALE ANIMATION -->
+  <div class="effect-card">
+    <div class="effect-demo demo-scale" style="background:#0a0e17">
+      <div class="scale-dots">
+        <div class="scale-dot">⚡</div>
+        <div class="scale-dot">🔌</div>
+        <div class="scale-dot">🚨</div>
+        <div class="scale-dot">📡</div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Scale Animation</div>
+      <div class="effect-desc">Pulsação de escala via <code>@keyframes</code> com <code>transform: scale()</code> e <code>animation-delay</code> incremental.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+  <!-- 7. BOUNCE ANIMATION -->
+  <div class="effect-card">
+    <div class="effect-demo" style="background:#0a0e17">
+      <div class="bounce-balls">
+        <div class="bounce-ball"></div>
+        <div class="bounce-ball"></div>
+        <div class="bounce-ball"></div>
+        <div class="bounce-ball"></div>
+        <div class="bounce-ball"></div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Bounce Animation</div>
+      <div class="effect-desc">Efeito mola via <code>cubic-bezier(.28,.84,.42,1)</code> com bolinhas em cascata via <code>animation-delay</code>.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+  <!-- 8. FLOATING ANIMATION -->
+  <div class="effect-card">
+    <div class="effect-demo" style="background:linear-gradient(135deg,#0f0c29,#302b63)">
+      <div class="float-items">
+        <div class="float-card">🗺️<br>Mapas</div>
+        <div class="float-card">⚡<br>Energia</div>
+        <div class="float-card">📡<br>Campo</div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Floating Animation</div>
+      <div class="effect-desc">Elementos flutuam via <code>@keyframes</code> alternando <code>translateY + rotate</code> com delays diferentes.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+  <!-- 9. PULSE EFFECT -->
+  <div class="effect-card">
+    <div class="effect-demo" style="background:#0a0e17;gap:20px">
+      <div style="text-align:center">
+        <div class="pulse-ring pr-green"><span class="pulse-icon">✅</span></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:8px">Online</div>
+      </div>
+      <div style="text-align:center">
+        <div class="pulse-ring pr-red"><span class="pulse-icon">🚨</span></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:8px">Crítico</div>
+      </div>
+      <div style="text-align:center">
+        <div class="pulse-ring pr-blue"><span class="pulse-icon">📡</span></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:8px">Transmitindo</div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Pulse Effect</div>
+      <div class="effect-desc">Ondas pulsantes via <code>::before/::after</code> com <code>scale(2) + opacity: 0</code> animados com delay.</div>
+      <span class="effect-tag">CSS animation + pseudo-elements</span>
+    </div>
+  </div>
+
+  <!-- 10. RIPPLE EFFECT -->
+  <div class="effect-card">
+    <div class="effect-demo" style="background:#0a0e17;flex-direction:column;gap:14px">
+      <button class="ripple-btn" id="ripple-btn">🌊 Clique aqui</button>
+      <div style="font-size:11px;color:var(--text3)">Clique para ver a onda se expandir</div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Ripple Effect</div>
+      <div class="effect-desc">Onda irradiando do ponto de clique: elemento circular adicionado dinamicamente com <code>animation: scale(4) → opacity:0</code>.</div>
+      <span class="effect-tag">CSS animation + JS click</span>
+    </div>
+  </div>
+
+  <!-- 11. MAGNETIC BUTTON -->
+  <div class="effect-card">
+    <div class="effect-demo" style="background:#0a0a14" id="magnetic-area">
+      <button class="magnetic-btn" id="magnetic-btn">🧲 Me atraia</button>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Magnetic Button</div>
+      <div class="effect-desc">Botão é atraído magneticamente pelo cursor via <code>translate()</code> calculado pela posição relativa do mouse.</div>
+      <span class="effect-tag">JS mousemove + CSS transform</span>
+    </div>
+  </div>
+
+  <!-- 12. CURSOR TRAIL -->
+  <div class="effect-card">
+    <div class="effect-demo" style="padding:0;display:block">
+      <div class="cursor-trail-demo" id="cursor-trail">
+        <span class="ct-hint">✦ Mova o mouse aqui ✦</span>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Cursor Trail</div>
+      <div class="effect-desc">Rastro colorido: círculos gerados a cada <code>mousemove</code>, desaparecem via <code>@keyframes</code> com <code>scale(0) + opacity:0</code>.</div>
+      <span class="effect-tag">CSS animation + JS mousemove</span>
+    </div>
+  </div>
+
+  <!-- 13. PARTICLE SYSTEM -->
+  <div class="effect-card" style="grid-column:span 2">
+    <div class="effect-demo" style="padding:0;display:block">
+      <canvas class="particle-canvas" id="particle-canvas"></canvas>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Particle System</div>
+      <div class="effect-desc">Sistema de partículas interativo com Canvas 2D: partículas com velocidade, gravidade, rebote e conexões por proximidade.</div>
+      <span class="effect-tag">JS Canvas 2D</span>
+    </div>
+  </div>
+
+  <!-- 14. MOUSE FOLLOW -->
+  <div class="effect-card">
+    <div class="effect-demo" style="padding:0;display:block">
+      <div class="mouse-follow-demo" id="mf-demo">
+        <div class="mouse-cursor" id="mf-outer"><div class="cursor-outer"></div></div>
+        <div class="mouse-cursor" id="mf-inner"><div class="cursor-inner"></div></div>
+        <div class="mf-magnet" id="mf-magnet" style="top:50%;left:50%;transform:translate(-50%,-50%)">⚡</div>
+        <span class="mf-hint">Cursor customizado</span>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Mouse Follow Effect</div>
+      <div class="effect-desc">Cursor personalizado com anel externo e ponto interno seguindo o mouse com lag suave via <code>lerp</code>.</div>
+      <span class="effect-tag">JS mousemove + CSS transform</span>
+    </div>
+  </div>
+
+  <!-- 15. INFINITE MARQUEE -->
+  <div class="effect-card" style="grid-column:span 2">
+    <div class="effect-demo" style="flex-direction:column;gap:12px;padding:20px;background:var(--bg2)">
+      <div class="marquee-wrapper">
+        <div class="marquee-track" id="marquee1">
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Curitiba</div>
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Norte</div>
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Oeste</div>
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Sul</div>
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Leste</div>
+          <div class="marquee-item"><span class="mi-dot"></span>40 BSCs Ativos</div>
+          <div class="marquee-item"><span class="mi-dot"></span>690 Equipes em Campo</div>
+          <div class="marquee-item"><span class="mi-dot"></span>1.500 Serviços Comerciais</div>
+          <!-- duplicate for seamless loop -->
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Curitiba</div>
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Norte</div>
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Oeste</div>
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Sul</div>
+          <div class="marquee-item"><span class="mi-dot"></span>Regional Leste</div>
+          <div class="marquee-item"><span class="mi-dot"></span>40 BSCs Ativos</div>
+          <div class="marquee-item"><span class="mi-dot"></span>690 Equipes em Campo</div>
+          <div class="marquee-item"><span class="mi-dot"></span>1.500 Serviços Comerciais</div>
+        </div>
+      </div>
+      <div class="marquee-wrapper">
+        <div class="marquee-track marquee-track-2">
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#ef4444"></span>500 Emergências Hoje</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#22c55e"></span>Paraná · 5 Regionais</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#3b82f6"></span>Sistema Online 24h</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#f97316"></span>Despacho Copel</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#a855f7"></span>CWB · NRT · OES · SUL · LES</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#ef4444"></span>500 Emergências Hoje</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#22c55e"></span>Paraná · 5 Regionais</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#3b82f6"></span>Sistema Online 24h</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#f97316"></span>Despacho Copel</div>
+          <div class="marquee-item-2"><span class="mi-dot-2" style="background:#a855f7"></span>CWB · NRT · OES · SUL · LES</div>
+        </div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Infinite Marquee</div>
+      <div class="effect-desc">Faixa em loop perfeito: conteúdo duplicado, animado com <code>translateX(-50%)</code>. Pausa no hover via <code>animation-play-state: paused</code>.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── 1. PARALLAX ── */
+const pWrap = document.getElementById('parallax-wrap');
+if(pWrap) {
+  pWrap.addEventListener('mousemove', e => {
+    const r = pWrap.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - .5;
+    const y = (e.clientY - r.top)  / r.height - .5;
+    document.getElementById('p-stars').style.transform = `translate(${x*-30}px, ${y*-20}px)`;
+    document.getElementById('p-mountains').style.transform = `translate(${x*-15}px, ${y*-10}px)`;
+    document.getElementById('p-text').style.transform = `translate(calc(-50% + ${x*8}px), calc(-50% + ${y*5}px))`;
+  });
+}
+
+/* ── 2. SMOOTH SCROLL ── */
+function smoothGo(i) {
+  const d = document.getElementById('smooth-demo');
+  d.scrollTo({ top: i * 120, behavior: 'smooth' });
+}
+
+/* ── 3. REVEAL ── */
+function triggerReveal() {
+  document.querySelectorAll('.reveal-item').forEach((el,i) => {
+    setTimeout(() => el.classList.add('revealed'), i * 150);
+  });
+}
+setTimeout(triggerReveal, 400);
+// re-trigger on click
+document.getElementById('reveal-container')?.addEventListener('click', () => {
+  document.querySelectorAll('.reveal-item').forEach(el => el.classList.remove('revealed'));
+  setTimeout(triggerReveal, 100);
+});
+
+/* ── 5. SLIDE IN ── */
+setTimeout(() => {
+  document.querySelectorAll('.slide-card').forEach((el,i) => {
+    setTimeout(() => el.classList.add('slid'), i * 200);
+  });
+}, 300);
+
+/* ── 10. RIPPLE ── */
+document.getElementById('ripple-btn')?.addEventListener('click', function(e) {
+  const r = this.getBoundingClientRect();
+  const size = Math.max(r.width, r.height) * 2;
+  const x = e.clientX - r.left - size/2;
+  const y = e.clientY - r.top  - size/2;
+  const wave = document.createElement('span');
+  wave.className = 'ripple-wave';
+  wave.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+  this.appendChild(wave);
+  setTimeout(() => wave.remove(), 700);
+});
+
+/* ── 11. MAGNETIC BUTTON ── */
+const magBtn = document.getElementById('magnetic-btn');
+const magArea = document.getElementById('magnetic-area');
+if(magBtn && magArea) {
+  magArea.addEventListener('mousemove', e => {
+    const r = magBtn.getBoundingClientRect();
+    const cx = r.left + r.width/2, cy = r.top + r.height/2;
+    const dx = e.clientX - cx, dy = e.clientY - cy;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if(dist < 120) {
+      const strength = (120 - dist) / 120;
+      magBtn.style.transform = `translate(${dx*strength*.4}px,${dy*strength*.4}px)`;
+    } else {
+      magBtn.style.transform = '';
+    }
+  });
+  magArea.addEventListener('mouseleave', () => { magBtn.style.transform = ''; });
+}
+
+/* ── 12. CURSOR TRAIL ── */
+const trailEl = document.getElementById('cursor-trail');
+const colors = ['#3b82f6','#8b5cf6','#ec4899','#f97316','#14b8a6','#eab308'];
+let trailIdx = 0;
+if(trailEl) {
+  trailEl.addEventListener('mousemove', e => {
+    const r = trailEl.getBoundingClientRect();
+    const dot = document.createElement('div');
+    const size = 8 + Math.random()*12;
+    dot.className = 'trail-dot';
+    dot.style.cssText = `left:${e.clientX-r.left}px;top:${e.clientY-r.top}px;width:${size}px;height:${size}px;background:${colors[trailIdx%colors.length]};opacity:.9;`;
+    trailEl.appendChild(dot);
+    trailIdx++;
+    setTimeout(() => dot.remove(), 600);
+  });
+}
+
+/* ── 13. PARTICLE SYSTEM ── */
+(function(){
+  const canvas = document.getElementById('particle-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 180;
+  const N = 55;
+  const particles = Array.from({length:N}, () => ({
+    x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+    vx: (Math.random()-.5)*.9, vy: (Math.random()-.5)*.9,
+    r: 2+Math.random()*2.5,
+    hue: Math.floor(Math.random()*360)
+  }));
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>canvas.width)  p.vx*=-1;
+      if(p.y<0||p.y>canvas.height) p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `hsla(${p.hue},80%,65%,.85)`;
+      ctx.fill();
+    });
+    // connections
+    particles.forEach((a,i) => {
+      particles.slice(i+1).forEach(b => {
+        const dx=a.x-b.x, dy=a.y-b.y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<90){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle = `rgba(100,150,255,${(1-d/90)*.4})`;
+          ctx.lineWidth = .8;
+          ctx.stroke();
+        }
+      });
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── 14. MOUSE FOLLOW ── */
+(function(){
+  const demo = document.getElementById('mf-demo');
+  const outer = document.getElementById('mf-outer');
+  const inner = document.getElementById('mf-inner');
+  if(!demo||!outer||!inner) return;
+  let mx=0,my=0,ox=0,oy=0,ix=0,iy=0;
+  demo.addEventListener('mousemove', e => {
+    const r = demo.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+  });
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function tick(){
+    ox=lerp(ox,mx,.08); oy=lerp(oy,my,.08);
+    ix=lerp(ix,mx,.25); iy=lerp(iy,my,.25);
+    outer.style.transform = `translate(${ox}px,${oy}px)`;
+    inner.style.transform = `translate(${ix}px,${iy}px)`;
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
+{% endblock %}

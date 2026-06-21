@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}Emergências — Copel Despacho{% endblock %}
+{% block page_title %}Serviços Emergenciais{% endblock %}
+{% block page_meta %}<span class="badge-date">{{ hoje }}</span>{% endblock %}
+
+{% block content %}
+<div class="kpi-grid kpi-mini">
+    <div class="kpi-card kpi-red">
+        <div class="kpi-label">Total</div>
+        <div class="kpi-value">{{ total }}</div>
+    </div>
+    <div class="kpi-card kpi-red" style="--accent:#dc2626">
+        <div class="kpi-label">Abertas</div>
+        <div class="kpi-value">{{ abertos }}</div>
+    </div>
+    <div class="kpi-card kpi-orange">
+        <div class="kpi-label">Em Atendimento</div>
+        <div class="kpi-value">{{ em_atendimento }}</div>
+    </div>
+    <div class="kpi-card kpi-green">
+        <div class="kpi-label">Concluídas</div>
+        <div class="kpi-value">{{ concluidos }}</div>
+    </div>
+    <div class="kpi-card" style="background:rgba(239,68,68,.15); border-color:#ef4444">
+        <div class="kpi-label">⚠ Críticas</div>
+        <div class="kpi-value" style="color:#ef4444">{{ criticos }}</div>
+    </div>
+</div>
+
+<div class="filter-bar">
+    <form method="GET" action="{{ url_for('emergenciais') }}" class="filter-form">
+        <div class="filter-group">
+            <label>Regional</label>
+            <select name="regional_id" onchange="this.form.submit()">
+                <option value="">Todas</option>
+                {% for r in regionais %}
+                <option value="{{ r.id }}" {% if regional_id == r.id %}selected{% endif %}>{{ r.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>BSC</label>
+            <select name="bsc_id" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                {% for b in bscs %}
+                <option value="{{ b.id }}" {% if bsc_id == b.id %}selected{% endif %}>{{ b.codigo }} — {{ b.municipio }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Status</label>
+            <select name="status" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="ABERTO" {% if status_f == 'ABERTO' %}selected{% endif %}>Aberto</option>
+                <option value="EM_ATENDIMENTO" {% if status_f == 'EM_ATENDIMENTO' %}selected{% endif %}>Em Atendimento</option>
+                <option value="CONCLUIDO" {% if status_f == 'CONCLUIDO' %}selected{% endif %}>Concluído</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Prioridade</label>
+            <select name="prioridade" onchange="this.form.submit()">
+                <option value="">Todas</option>
+                <option value="3" {% if prioridade_f == '3' %}selected{% endif %}>⚠ Crítica</option>
+                <option value="2" {% if prioridade_f == '2' %}selected{% endif %}>Média</option>
+                <option value="1" {% if prioridade_f == '1' %}selected{% endif %}>Baixa</option>
+            </select>
+        </div>
+        <a href="{{ url_for('emergenciais') }}" class="btn-clear">Limpar filtros</a>
+    </form>
+</div>
+
+<div class="card">
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Protocolo</th>
+                    <th>Tipo de Ocorrência</th>
+                    <th>Endereço</th>
+                    <th>Clientes Afetados</th>
+                    <th>Equipe</th>
+                    <th>BSC</th>
+                    <th>Prioridade</th>
+                    <th>Status</th>
+                    <th>Horário</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in servicos.items %}
+                <tr {% if s.prioridade == 3 %}class="row-critica"{% endif %}>
+                    <td><code class="proto">{{ s.protocolo }}</code></td>
+                    <td>{{ s.tipo }}</td>
+                    <td class="addr">{{ s.endereco }}</td>
+                    <td class="center">
+                        {% if s.n_clientes_afetados > 1000 %}
+                        <span class="badge-afetados">{{ s.n_clientes_afetados }}</span>
+                        {% else %}
+                        {{ s.n_clientes_afetados }}
+                        {% endif %}
+                    </td>
+                    <td>{% if s.equipe %}<span class="equipe-badge">{{ s.equipe.codigo }}</span>{% else %}—{% endif %}</td>
+                    <td>{% if s.equipe %}{{ s.equipe.bsc.codigo }}{% else %}—{% endif %}</td>
+                    <td><span class="prio prio-{{ s.prioridade_class }}">{{ s.prioridade_label }}</span></td>
+                    <td><span class="status-tag st-{{ s.status|lower }}">{{ s.status|replace('_',' ') }}</span></td>
+                    <td class="mono">{{ s.criado_em.strftime('%H:%M') }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="9" class="empty">Nenhuma emergência encontrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        {% if servicos.has_prev %}
+        <a href="{{ url_for('emergenciais', page=servicos.prev_num, regional_id=regional_id, bsc_id=bsc_id, status=status_f, prioridade=prioridade_f) }}" class="page-btn">← Anterior</a>
+        {% endif %}
+        <span class="page-info">Página {{ servicos.page }} de {{ servicos.pages }} &nbsp;({{ total }} registros)</span>
+        {% if servicos.has_next %}
+        <a href="{{ url_for('emergenciais', page=servicos.next_num, regional_id=regional_id, bsc_id=bsc_id, status=status_f, prioridade=prioridade_f) }}" class="page-btn">Próxima →</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

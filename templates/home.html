@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block title %}Painel Geral — Copel Despacho{% endblock %}
+{% block page_title %}Painel Operacional{% endblock %}
+{% block page_meta %}<span class="badge-date">{{ hoje }}</span>{% endblock %}
+
+{% block content %}
+<div class="kpi-grid">
+    <div class="kpi-card kpi-blue" id="kpi-comerciais">
+        <div class="kpi-label">Serviços Comerciais</div>
+        <div class="kpi-value" id="val-com-total">{{ total_comerciais }}</div>
+        <div class="kpi-sub">
+            <span class="dot dot-yellow"></span>{{ comerciais_pendentes }} pendentes &nbsp;
+            <span class="dot dot-green"></span>{{ comerciais_concluidos }} concluídos
+        </div>
+    </div>
+    <div class="kpi-card kpi-red" id="kpi-emergenciais">
+        <div class="kpi-label">Emergências</div>
+        <div class="kpi-value" id="val-eme-total">{{ total_emergenciais }}</div>
+        <div class="kpi-sub">
+            <span class="dot dot-red"></span>{{ emergenciais_abertos }} abertas &nbsp;
+            <span class="dot dot-green"></span>{{ emergenciais_concluidos }} concluídas
+        </div>
+    </div>
+    <div class="kpi-card kpi-teal" id="kpi-equipes">
+        <div class="kpi-label">Equipes de Campo</div>
+        <div class="kpi-value" id="val-eq-total">{{ total_equipes }}</div>
+        <div class="kpi-sub">
+            <span class="dot dot-green"></span>{{ equipes_campo }} em campo
+        </div>
+    </div>
+</div>
+
+<div class="section-row">
+    <div class="card card-wide">
+        <div class="card-header">
+            <h2 class="card-title">Resumo por Regional</h2>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Regional</th>
+                        <th>Equipes</th>
+                        <th>Comerciais</th>
+                        <th>Emergenciais</th>
+                        <th>Progresso Comercial</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in stats_regionais %}
+                    <tr>
+                        <td><strong>{{ r.nome }}</strong></td>
+                        <td>{{ r.equipes }}</td>
+                        <td>{{ r.comerciais }}</td>
+                        <td>{{ r.emergenciais }}</td>
+                        <td>
+                            <div class="mini-bar">
+                                <div class="mini-bar-fill" style="width: {{ [((r.comerciais / [total_comerciais,1]|max)*100)|int, 100]|min }}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card card-narrow">
+        <div class="card-header">
+            <h2 class="card-title">Status Equipes</h2>
+        </div>
+        <div class="status-pills">
+            <div class="status-pill green">
+                <span class="sp-label">Em Campo</span>
+                <span class="sp-val" id="val-eq-campo">—</span>
+            </div>
+            <div class="status-pill blue">
+                <span class="sp-label">Disponíveis</span>
+                <span class="sp-val" id="val-eq-disp">—</span>
+            </div>
+            <div class="status-pill yellow">
+                <span class="sp-label">Em Pausa</span>
+                <span class="sp-val" id="val-eq-pausa">—</span>
+            </div>
+            <div class="status-pill gray">
+                <span class="sp-label">Indisponíveis</span>
+                <span class="sp-val" id="val-eq-indisp">—</span>
+            </div>
+        </div>
+        <div class="card-header" style="margin-top:1.5rem">
+            <h2 class="card-title">Emergências</h2>
+        </div>
+        <div class="status-pills">
+            <div class="status-pill red">
+                <span class="sp-label">Abertas</span>
+                <span class="sp-val" id="val-eme-abertos">—</span>
+            </div>
+            <div class="status-pill orange">
+                <span class="sp-label">Em Atendimento</span>
+                <span class="sp-val" id="val-eme-atend">—</span>
+            </div>
+            <div class="status-pill green">
+                <span class="sp-label">Concluídas</span>
+                <span class="sp-val" id="val-eme-conc">—</span>
+            </div>
+            <div class="status-pill critica">
+                <span class="sp-label">Críticas</span>
+                <span class="sp-val" id="val-eme-crit">—</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="links-row">
+    <a href="{{ url_for('comerciais') }}" class="quick-link ql-blue">
+        <span class="ql-icon">◉</span>
+        <span class="ql-label">Ver Serviços Comerciais</span>
+        <span class="ql-arrow">→</span>
+    </a>
+    <a href="{{ url_for('emergenciais') }}" class="quick-link ql-red">
+        <span class="ql-icon">◌</span>
+        <span class="ql-label">Ver Emergências</span>
+        <span class="ql-arrow">→</span>
+    </a>
+    <a href="{{ url_for('equipes') }}" class="quick-link ql-teal">
+        <span class="ql-icon">◎</span>
+        <span class="ql-label">Ver Equipes de Campo</span>
+        <span class="ql-arrow">→</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function refreshStats() {
+    fetch('/api/stats')
+        .then(r => r.json())
+        .then(d => {
+            document.getElementById('val-com-total').textContent = d.comerciais.total;
+            document.getElementById('val-eme-total').textContent = d.emergenciais.total;
+            document.getElementById('val-eq-total').textContent = d.equipes.total;
+            document.getElementById('val-eq-campo').textContent = d.equipes.em_campo;
+            document.getElementById('val-eq-disp').textContent = d.equipes.disponivel;
+            document.getElementById('val-eq-pausa').textContent = d.equipes.em_pausa;
+            document.getElementById('val-eq-indisp').textContent = d.equipes.indisponivel;
+            document.getElementById('val-eme-abertos').textContent = d.emergenciais.abertos;
+            document.getElementById('val-eme-atend').textContent = d.emergenciais.em_atendimento;
+            document.getElementById('val-eme-conc').textContent = d.emergenciais.concluidos;
+            document.getElementById('val-eme-crit').textContent = d.emergenciais.criticos;
+        });
+}
+refreshStats();
+setInterval(refreshStats, 30000);
+</script>
+{% endblock %}

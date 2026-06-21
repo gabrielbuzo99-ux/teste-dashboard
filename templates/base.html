@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Copel Despacho{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+{% if session.user_id %}
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">⚡</div>
+            <div class="brand-text">
+                <span class="brand-name">COPEL</span>
+                <span class="brand-sub">DESPACHO</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('home') }}" class="nav-item {% if request.endpoint == 'home' %}active{% endif %}">
+                <span class="nav-icon">◈</span>
+                <span>Painel Geral</span>
+            </a>
+            <a href="{{ url_for('comerciais') }}" class="nav-item {% if request.endpoint == 'comerciais' %}active{% endif %}">
+                <span class="nav-icon">◉</span>
+                <span>Serviços Comerciais</span>
+            </a>
+            <a href="{{ url_for('emergenciais') }}" class="nav-item {% if request.endpoint == 'emergenciais' %}active{% endif %}">
+                <span class="nav-icon">◌</span>
+                <span>Emergências</span>
+            </a>
+            <a href="{{ url_for('equipes') }}" class="nav-item {% if request.endpoint == 'equipes' %}active{% endif %}">
+                <span class="nav-icon">◎</span>
+                <span>Equipes de Campo</span>
+            </a>
+            <div class="nav-divider"></div>
+            <span class="nav-section-label">Laboratório CSS/JS</span>
+            <a href="{{ url_for('efeitos_visuais') }}" class="nav-item {% if request.endpoint == 'efeitos_visuais' %}active{% endif %}">
+                <span class="nav-icon">✦</span>
+                <span>Efeitos Visuais</span>
+            </a>
+            <a href="{{ url_for('efeitos_movimento') }}" class="nav-item {% if request.endpoint == 'efeitos_movimento' %}active{% endif %}">
+                <span class="nav-icon">⟳</span>
+                <span>Efeitos de Movimento</span>
+            </a>
+            <a href="{{ url_for('efeitos_login') }}" class="nav-item {% if request.endpoint == 'efeitos_login' %}active{% endif %}">
+                <span class="nav-icon">★</span>
+                <span>Efeitos Premium Login</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">{{ session.username[0]|upper }}</div>
+                <div class="user-details">
+                    <span class="user-name">{{ session.username }}</span>
+                    <span class="user-role">{{ session.role }}</span>
+                </div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Sair</a>
+        </div>
+    </aside>
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
+            <div class="page-meta">{% block page_meta %}{% endblock %}</div>
+        </div>
+        <div class="page-body">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+{% else %}
+{% block auth_content %}{% endblock %}
+{% endif %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

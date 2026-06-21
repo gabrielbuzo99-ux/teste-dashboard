@@ -1,0 +1,756 @@
+{% extends 'base.html' %}
+{% block title %}Efeitos Visuais — Copel Despacho{% endblock %}
+{% block page_title %}Efeitos Visuais CSS{% endblock %}
+{% block page_meta %}<span class="badge-date">16 efeitos demonstrados</span>{% endblock %}
+
+{% block content %}
+<style>
+/* ══════════════════════════════════════════════
+   1. GLASSMORPHISM
+══════════════════════════════════════════════ */
+.demo-glass-bg {
+  width:100%; height:100%;
+  background: linear-gradient(135deg,#667eea,#764ba2,#f093fb);
+  display:flex; align-items:center; justify-content:center;
+}
+.glass-card {
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 16px;
+  padding: 28px 36px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+.glass-card h3 { font-size:18px; font-weight:700; margin-bottom:6px; }
+.glass-card p  { font-size:12px; opacity:.8; }
+
+/* ══════════════════════════════════════════════
+   2. NEUMORPHISM
+══════════════════════════════════════════════ */
+.demo-neu-bg {
+  background: #e0e5ec;
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center; gap:20px;
+}
+.neu-card {
+  background: #e0e5ec;
+  border-radius: 20px;
+  padding: 24px 32px;
+  box-shadow: 8px 8px 16px #b8bec7, -8px -8px 16px #ffffff;
+  color: #6b7a99;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+.neu-btn {
+  background: #e0e5ec;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  box-shadow: 5px 5px 10px #b8bec7, -5px -5px 10px #ffffff;
+  color: #5a67d8;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+  transition: box-shadow .2s;
+}
+.neu-btn:active { box-shadow: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px #ffffff; }
+
+/* ══════════════════════════════════════════════
+   3. CLAYMORPHISM
+══════════════════════════════════════════════ */
+.demo-clay-bg {
+  background: linear-gradient(135deg,#f8e1ff,#c3f0e8);
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center; gap:16px;
+  flex-wrap:wrap; padding:20px;
+}
+.clay-card {
+  background: linear-gradient(145deg,#ffffff,#f0d8ff);
+  border-radius: 24px;
+  padding: 22px 28px;
+  box-shadow: 8px 8px 0px rgba(160,100,220,.25),
+              inset 0 -4px 0 rgba(160,100,220,.15),
+              inset 0 2px 8px rgba(255,255,255,.9);
+  border: 2px solid rgba(255,255,255,.9);
+  font-weight: 700;
+  font-size: 13px;
+  color: #7c3aed;
+  text-align: center;
+}
+.clay-btn {
+  background: linear-gradient(145deg,#a78bfa,#7c3aed);
+  border: none;
+  border-radius: 50px;
+  padding: 12px 26px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(109,40,217,.4), inset 0 2px 6px rgba(255,255,255,.3);
+  transition: transform .1s, box-shadow .1s;
+}
+.clay-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(109,40,217,.4), inset 0 2px 6px rgba(255,255,255,.3); }
+
+/* ══════════════════════════════════════════════
+   4. FROSTED GLASS
+══════════════════════════════════════════════ */
+.demo-frost-bg {
+  width:100%; height:100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><defs><radialGradient id="a" cx="30%" cy="40%"><stop offset="0%" stop-color="%2306b6d4"/><stop offset="100%" stop-color="%233b82f6"/></radialGradient><radialGradient id="b" cx="70%" cy="70%"><stop offset="0%" stop-color="%23a855f7"/><stop offset="100%" stop-color="%23ec4899"/></radialGradient></defs><rect fill="url(%23a)" width="400" height="200"/><ellipse fill="url(%23b)" cx="300" cy="140" rx="180" ry="120" opacity=".7"/></svg>') center/cover;
+  display:flex; align-items:center; justify-content:center;
+}
+.frost-panel {
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(20px) brightness(1.1) contrast(.9);
+  -webkit-backdrop-filter: blur(20px) brightness(1.1) contrast(.9);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 20px;
+  padding: 24px 32px;
+  color: #fff;
+  text-align: center;
+}
+.frost-panel .frost-icon { font-size:32px; margin-bottom:8px; }
+.frost-panel h3 { font-size:16px; font-weight:700; }
+.frost-panel p  { font-size:11px; opacity:.75; margin-top:4px; }
+
+/* ══════════════════════════════════════════════
+   5. LIQUID GLASS UI
+══════════════════════════════════════════════ */
+.demo-liquid-bg {
+  width:100%; height:100%;
+  background: linear-gradient(135deg,#1e3a5f,#0f2744);
+  display:flex; align-items:center; justify-content:center; gap:14px;
+}
+.liquid-widget {
+  background: rgba(255,255,255,.07);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 22px;
+  padding: 18px 22px;
+  color: #fff;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.2), 0 8px 32px rgba(0,0,0,.3);
+}
+.liquid-widget .lw-val { font-size:28px; font-weight:800; letter-spacing:-.02em; }
+.liquid-widget .lw-lbl { font-size:10px; opacity:.6; margin-top:2px; letter-spacing:.06em; text-transform:uppercase; }
+
+/* ══════════════════════════════════════════════
+   6. AURORA UI
+══════════════════════════════════════════════ */
+.demo-aurora-bg {
+  width:100%; height:100%;
+  background: #000d1a;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.aurora-orb {
+  position:absolute;
+  border-radius:50%;
+  filter: blur(60px);
+  animation: aurora-drift 6s ease-in-out infinite;
+  opacity: .55;
+}
+.aurora-orb.a1 { width:200px; height:200px; background:#00ff88; top:-40px; left:-20px; animation-delay:0s; }
+.aurora-orb.a2 { width:180px; height:180px; background:#7b2ff7; top:20px; right:-30px; animation-delay:-2s; }
+.aurora-orb.a3 { width:160px; height:160px; background:#00c9ff; bottom:-30px; left:40%; animation-delay:-4s; }
+@keyframes aurora-drift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(20px,-15px) scale(1.08); }
+  66%      { transform: translate(-10px,10px) scale(.95); }
+}
+.aurora-content { position:relative; z-index:2; text-align:center; color:#fff; }
+.aurora-content h3 { font-size:22px; font-weight:800; letter-spacing:.04em; background: linear-gradient(90deg,#00ff88,#00c9ff,#7b2ff7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.aurora-content p  { font-size:12px; opacity:.7; margin-top:4px; }
+
+/* ══════════════════════════════════════════════
+   7. MESH GRADIENT
+══════════════════════════════════════════════ */
+.demo-mesh-bg {
+  width:100%; height:100%;
+  background:
+    radial-gradient(ellipse at 20% 20%, #ff6b6b55 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 10%, #4ecdc455 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, #a29bfe55 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 70%, #fd79a855 0%, transparent 50%),
+    radial-gradient(ellipse at 10% 70%, #fdcb6e55 0%, transparent 50%),
+    #1a1a2e;
+  display:flex; align-items:center; justify-content:center;
+  animation: mesh-shift 8s ease-in-out infinite;
+}
+@keyframes mesh-shift {
+  0%,100% { filter: hue-rotate(0deg); }
+  50%     { filter: hue-rotate(30deg); }
+}
+.mesh-text { text-align:center; color:#fff; }
+.mesh-text h3 { font-size:20px; font-weight:800; }
+.mesh-text p  { font-size:11px; opacity:.7; margin-top:6px; }
+
+/* ══════════════════════════════════════════════
+   8. GLOW EFFECT
+══════════════════════════════════════════════ */
+.demo-glow-bg {
+  background: #0a0a0f;
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center; gap:20px;
+}
+.glow-box {
+  border-radius: 14px;
+  padding: 18px 26px;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  cursor: default;
+  transition: box-shadow .3s, transform .2s;
+}
+.glow-box.gb-blue { background:#1a2a4a; color:#60a5fa; border:1px solid #3b82f6; box-shadow:0 0 20px rgba(59,130,246,.5), inset 0 0 20px rgba(59,130,246,.1); }
+.glow-box.gb-pur  { background:#2a1a4a; color:#c084fc; border:1px solid #a855f7; box-shadow:0 0 20px rgba(168,85,247,.5), inset 0 0 20px rgba(168,85,247,.1); }
+.glow-box.gb-grn  { background:#0a2a1a; color:#34d399; border:1px solid #10b981; box-shadow:0 0 20px rgba(16,185,129,.5), inset 0 0 20px rgba(16,185,129,.1); }
+.glow-box:hover { transform:scale(1.06); }
+.glow-box.gb-blue:hover { box-shadow:0 0 40px rgba(59,130,246,.8), inset 0 0 30px rgba(59,130,246,.2); }
+.glow-box.gb-pur:hover  { box-shadow:0 0 40px rgba(168,85,247,.8), inset 0 0 30px rgba(168,85,247,.2); }
+.glow-box.gb-grn:hover  { box-shadow:0 0 40px rgba(16,185,129,.8), inset 0 0 30px rgba(16,185,129,.2); }
+
+/* ══════════════════════════════════════════════
+   9. NEON UI
+══════════════════════════════════════════════ */
+.demo-neon-bg {
+  background: #020209;
+  width:100%; height:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+}
+.neon-text {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  color: #fff;
+  text-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+    0 0 42px #bc13fe,
+    0 0 82px #bc13fe,
+    0 0 92px #bc13fe;
+  animation: neon-flicker 4s infinite;
+}
+@keyframes neon-flicker {
+  0%,19%,21%,23%,25%,54%,56%,100% {
+    text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+      0 0 42px #bc13fe, 0 0 82px #bc13fe, 0 0 92px #bc13fe;
+  }
+  20%,24%,55% { text-shadow: none; }
+}
+.neon-btn-row { display:flex; gap:12px; }
+.neon-btn {
+  padding: 8px 20px;
+  border-radius: 6px;
+  border: 2px solid;
+  background: transparent;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: box-shadow .2s, background .2s;
+}
+.neon-btn.nb-pink { color:#ff2d9e; border-color:#ff2d9e; box-shadow:0 0 12px rgba(255,45,158,.4); }
+.neon-btn.nb-cyan { color:#0ff; border-color:#0ff; box-shadow:0 0 12px rgba(0,255,255,.4); }
+.neon-btn.nb-pink:hover { background:rgba(255,45,158,.1); box-shadow:0 0 24px rgba(255,45,158,.7); }
+.neon-btn.nb-cyan:hover { background:rgba(0,255,255,.1); box-shadow:0 0 24px rgba(0,255,255,.7); }
+
+/* ══════════════════════════════════════════════
+   10. CYBERPUNK UI
+══════════════════════════════════════════════ */
+.demo-cyber-bg {
+  background: #0d0d0d;
+  width:100%; height:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  position:relative; overflow:hidden;
+}
+.cyber-scan {
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,159,.03) 2px, rgba(0,255,159,.03) 4px);
+  pointer-events:none;
+  animation: cyber-scan-move 6s linear infinite;
+}
+@keyframes cyber-scan-move { to { background-position: 0 100px; } }
+.cyber-title {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: .2em;
+  color: #00ff9f;
+  text-shadow: 0 0 10px #00ff9f;
+  position: relative;
+}
+.cyber-title::before {
+  content: attr(data-text);
+  position:absolute; left:2px; top:0;
+  color: #ff0080;
+  clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+  animation: cyber-glitch .8s infinite;
+}
+@keyframes cyber-glitch {
+  0%,100% { transform:translate(0); opacity:0; }
+  10%,90% { opacity:1; }
+  20%      { transform:translate(-2px,1px); }
+  40%      { transform:translate(2px,-1px); }
+  60%      { transform:translate(-1px,2px); }
+  80%      { transform:translate(1px,-2px); }
+}
+.cyber-card {
+  border: 1px solid #00ff9f;
+  background: rgba(0,255,159,.05);
+  padding: 12px 24px;
+  font-size:12px; color:#00ff9f; letter-spacing:.08em;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  position:relative;
+}
+
+/* ══════════════════════════════════════════════
+   11. DARK GLASS UI
+══════════════════════════════════════════════ */
+.demo-darkglass-bg {
+  width:100%; height:100%;
+  background: linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+  display:flex; align-items:center; justify-content:center; gap:14px; padding:20px;
+}
+.dg-card {
+  background: rgba(255,255,255,.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 18px;
+  padding: 18px 20px;
+  color:#e2e8f0; text-align:center;
+  box-shadow: 0 4px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1);
+}
+.dg-card .dg-icon { font-size:28px; margin-bottom:8px; }
+.dg-card .dg-val  { font-size:22px; font-weight:800; }
+.dg-card .dg-lbl  { font-size:10px; opacity:.5; letter-spacing:.08em; text-transform:uppercase; margin-top:2px; }
+
+/* ══════════════════════════════════════════════
+   12. HOLOGRAPHIC EFFECT
+══════════════════════════════════════════════ */
+.demo-holo-bg {
+  background:#111;
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+.holo-card {
+  width:150px; height:200px;
+  border-radius:16px;
+  background: linear-gradient(135deg,
+    hsl(0,80%,60%),hsl(40,80%,60%),hsl(80,80%,60%),
+    hsl(160,80%,60%),hsl(220,80%,60%),hsl(280,80%,60%),hsl(320,80%,60%));
+  background-size: 400% 400%;
+  animation: holo-shift 3s linear infinite;
+  display:flex; align-items:center; justify-content:center;
+  font-size:36px;
+  box-shadow: 0 0 40px rgba(255,255,255,.25);
+  position:relative; overflow:hidden;
+}
+.holo-card::after {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(255,255,255,.3) 0%, transparent 50%, rgba(255,255,255,.15) 100%);
+  animation: holo-shine 3s ease-in-out infinite;
+}
+@keyframes holo-shift { to { background-position:100% 100%; } }
+@keyframes holo-shine {
+  0%,100% { opacity:.5; transform:translateX(-100%) rotate(45deg); }
+  50%      { opacity:1; transform:translateX(200%) rotate(45deg); }
+}
+
+/* ══════════════════════════════════════════════
+   13. METALLIC UI
+══════════════════════════════════════════════ */
+.demo-metal-bg {
+  background:#1a1a1a;
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center; gap:16px; padding:20px;
+}
+.metal-card {
+  background: linear-gradient(160deg,
+    #f0f0f0 0%,#c8c8c8 20%,#e8e8e8 35%,#a0a0a0 50%,
+    #d0d0d0 65%,#b8b8b8 80%,#e0e0e0 100%);
+  border-radius:14px;
+  padding:18px 24px;
+  text-align:center;
+  color:#2d2d2d;
+  font-weight:700;
+  font-size:13px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.8),
+    0 6px 16px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  border:1px solid #888;
+}
+.metal-badge {
+  display:inline-block;
+  background: linear-gradient(160deg,#d4af37,#f5e27a,#d4af37,#b8942a,#d4af37);
+  background-size:200%;
+  border-radius:50px;
+  padding:8px 20px;
+  font-size:12px; font-weight:800; color:#3d2b00;
+  box-shadow:0 2px 8px rgba(180,140,0,.5), inset 0 1px 0 rgba(255,240,100,.5);
+  animation: metal-shimmer 2s linear infinite;
+}
+@keyframes metal-shimmer { to { background-position:200% center; } }
+
+/* ══════════════════════════════════════════════
+   14. LIQUID UI
+══════════════════════════════════════════════ */
+.demo-liquidui-bg {
+  background:#f0f4ff;
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center; gap:16px;
+}
+.liquid-btn {
+  padding:14px 28px;
+  border:none; border-radius:50px;
+  font-size:14px; font-weight:700; color:#fff;
+  cursor:pointer;
+  position:relative; overflow:hidden;
+  transition:transform .2s;
+}
+.liquid-btn.lb-blue { background:linear-gradient(135deg,#667eea,#764ba2); }
+.liquid-btn.lb-pink { background:linear-gradient(135deg,#f093fb,#f5576c); }
+.liquid-btn::before {
+  content:'';
+  position:absolute;
+  width:120%; height:120%;
+  top:-10%; left:-10%;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.3) 0%, transparent 60%);
+  opacity:0;
+  transition:opacity .2s;
+}
+.liquid-btn:hover::before { opacity:1; }
+.liquid-btn:hover { transform:scale(1.05); }
+.liquid-card {
+  background:linear-gradient(135deg,rgba(102,126,234,.15),rgba(118,75,162,.1));
+  border:1px solid rgba(102,126,234,.3);
+  border-radius:24px;
+  padding:18px 22px;
+  text-align:center;
+  color:#4a5568;
+  font-weight:600; font-size:13px;
+  backdrop-filter:blur(8px);
+}
+
+/* ══════════════════════════════════════════════
+   15. GRADIENT BORDER
+══════════════════════════════════════════════ */
+.demo-gradborder-bg {
+  background:#0a0a14;
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; padding:20px;
+}
+.grad-border-card {
+  position:relative;
+  border-radius:14px;
+  padding:2px;
+  background:linear-gradient(135deg,#667eea,#f5576c,#4facfe,#00f2fe);
+  background-size:300% 300%;
+  animation:grad-border-spin 3s linear infinite;
+}
+@keyframes grad-border-spin { to { background-position:300% 300%; } }
+.grad-border-inner {
+  background:#0a0a14;
+  border-radius:12px;
+  padding:18px 24px;
+  color:#e2e8f0;
+  text-align:center;
+  font-weight:600; font-size:13px;
+}
+.grad-border-inner span { display:block; font-size:22px; margin-bottom:4px; }
+.grad-btn {
+  position:relative;
+  padding:2px;
+  border-radius:50px;
+  background:linear-gradient(90deg,#f093fb,#f5576c,#4facfe,#00f2fe);
+  background-size:300%;
+  animation:grad-border-spin 2s linear infinite;
+  cursor:pointer; border:none;
+}
+.grad-btn-inner {
+  display:block;
+  background:#0a0a14;
+  border-radius:50px;
+  padding:10px 26px;
+  color:#e2e8f0;
+  font-weight:700; font-size:13px;
+}
+
+/* ══════════════════════════════════════════════
+   16. GRADIENT ANIMATION
+══════════════════════════════════════════════ */
+.demo-gradanim-bg {
+  width:100%; height:100%;
+  background:linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab);
+  background-size:400% 400%;
+  animation:gradanim 6s ease infinite;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+}
+@keyframes gradanim {
+  0%   { background-position:0% 50%; }
+  50%  { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+.gradanim-text { font-size:22px; font-weight:900; color:#fff; letter-spacing:.06em; text-shadow:0 2px 10px rgba(0,0,0,.2); }
+.gradanim-sub  { font-size:12px; color:rgba(255,255,255,.75); }
+</style>
+
+<div class="effects-grid">
+
+  <!-- 1 GLASSMORPHISM -->
+  <div class="effect-card">
+    <div class="effect-demo demo-glass-bg">
+      <div class="glass-card">
+        <h3>Glass Card</h3>
+        <p>backdrop-filter: blur(14px)</p>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Glassmorphism</div>
+      <div class="effect-desc">Vidro fosco translúcido com <code>backdrop-filter: blur()</code> e borda semitransparente.</div>
+      <span class="effect-tag">CSS</span>
+    </div>
+  </div>
+
+  <!-- 2 NEUMORPHISM -->
+  <div class="effect-card">
+    <div class="effect-demo demo-neu-bg">
+      <div class="neu-card">Card</div>
+      <button class="neu-btn">Botão</button>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Neumorphism</div>
+      <div class="effect-desc">Sombras suaves duplas (clara e escura) simulam relevo moldado na superfície.</div>
+      <span class="effect-tag">CSS box-shadow</span>
+    </div>
+  </div>
+
+  <!-- 3 CLAYMORPHISM -->
+  <div class="effect-card">
+    <div class="effect-demo demo-clay-bg">
+      <div class="clay-card">Clay Card</div>
+      <button class="clay-btn">Clicar!</button>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Claymorphism</div>
+      <div class="effect-desc">Versão "fofa" do neumorphism com bordas super arredondadas, gradientes pastéis e sombra inferior.</div>
+      <span class="effect-tag">CSS</span>
+    </div>
+  </div>
+
+  <!-- 4 FROSTED GLASS -->
+  <div class="effect-card">
+    <div class="effect-demo demo-frost-bg">
+      <div class="frost-panel">
+        <div class="frost-icon">❄️</div>
+        <h3>Frosted Glass</h3>
+        <p>brightness + contrast + blur</p>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Frosted Glass</div>
+      <div class="effect-desc">Vidro congelado: <code>blur(20px) brightness(1.1) contrast(.9)</code> sobre fundo colorido.</div>
+      <span class="effect-tag">CSS filter</span>
+    </div>
+  </div>
+
+  <!-- 5 LIQUID GLASS UI -->
+  <div class="effect-card">
+    <div class="effect-demo demo-liquid-bg">
+      <div class="liquid-widget"><div class="lw-val">98%</div><div class="lw-lbl">Uptime</div></div>
+      <div class="liquid-widget"><div class="lw-val">4.2k</div><div class="lw-lbl">Calls</div></div>
+      <div class="liquid-widget"><div class="lw-val">12ms</div><div class="lw-lbl">Latência</div></div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Liquid Glass UI</div>
+      <div class="effect-desc">Estilo iOS moderno: <code>blur(30px) saturate(200%)</code> com realce de borda interno.</div>
+      <span class="effect-tag">CSS backdrop-filter</span>
+    </div>
+  </div>
+
+  <!-- 6 AURORA UI -->
+  <div class="effect-card">
+    <div class="effect-demo demo-aurora-bg">
+      <div class="aurora-orb a1"></div>
+      <div class="aurora-orb a2"></div>
+      <div class="aurora-orb a3"></div>
+      <div class="aurora-content">
+        <h3>AURORA UI</h3>
+        <p>Gradientes orgânicos animados</p>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Aurora UI</div>
+      <div class="effect-desc">Orbes com <code>blur(60px)</code> animados independentemente simulam aurora boreal.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+  <!-- 7 MESH GRADIENT -->
+  <div class="effect-card">
+    <div class="effect-demo demo-mesh-bg">
+      <div class="mesh-text">
+        <h3>Mesh Gradient</h3>
+        <p>Múltiplos radial-gradient sobrepostos</p>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Mesh Gradient</div>
+      <div class="effect-desc">Múltiplos <code>radial-gradient</code> sobrepostos com deslocamentos distintos criam malha fluida animada.</div>
+      <span class="effect-tag">CSS gradient</span>
+    </div>
+  </div>
+
+  <!-- 8 GLOW EFFECT -->
+  <div class="effect-card">
+    <div class="effect-demo demo-glow-bg">
+      <div class="glow-box gb-blue">GLOW<br><small>Hover me</small></div>
+      <div class="glow-box gb-pur">NEON<br><small>Hover me</small></div>
+      <div class="glow-box gb-grn">GLOW<br><small>Hover me</small></div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Glow Effect</div>
+      <div class="effect-desc">Brilho neon via <code>box-shadow</code> multicamada — externo e interno — com intensidade no hover.</div>
+      <span class="effect-tag">CSS box-shadow</span>
+    </div>
+  </div>
+
+  <!-- 9 NEON UI -->
+  <div class="effect-card">
+    <div class="effect-demo demo-neon-bg">
+      <div class="neon-text">COPEL ⚡</div>
+      <div class="neon-btn-row">
+        <button class="neon-btn nb-pink">LIGAR</button>
+        <button class="neon-btn nb-cyan">STATUS</button>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Neon UI</div>
+      <div class="effect-desc">Interface futurista com <code>text-shadow</code> multicamada e animação de flickering.</div>
+      <span class="effect-tag">CSS text-shadow</span>
+    </div>
+  </div>
+
+  <!-- 10 CYBERPUNK UI -->
+  <div class="effect-card">
+    <div class="effect-demo demo-cyber-bg">
+      <div class="cyber-scan"></div>
+      <div class="cyber-title" data-text="CYBERPUNK">CYBERPUNK</div>
+      <div class="cyber-card">SISTEMA ATIVO · V2.077</div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Cyberpunk UI</div>
+      <div class="effect-desc">Scanlines via <code>repeating-linear-gradient</code>, glitch com pseudo-elemento e clip-path angular.</div>
+      <span class="effect-tag">CSS animation + clip-path</span>
+    </div>
+  </div>
+
+  <!-- 11 DARK GLASS UI -->
+  <div class="effect-card">
+    <div class="effect-demo demo-darkglass-bg">
+      <div class="dg-card"><div class="dg-icon">⚡</div><div class="dg-val">700</div><div class="dg-lbl">Equipes</div></div>
+      <div class="dg-card"><div class="dg-icon">📋</div><div class="dg-val">1500</div><div class="dg-lbl">Serviços</div></div>
+      <div class="dg-card"><div class="dg-icon">🚨</div><div class="dg-val">500</div><div class="dg-lbl">Emergências</div></div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Dark Glass UI</div>
+      <div class="effect-desc">Glassmorphism em fundo escuro com borda <code>rgba(255,255,255,.07)</code> e realce superior interno.</div>
+      <span class="effect-tag">CSS backdrop-filter</span>
+    </div>
+  </div>
+
+  <!-- 12 HOLOGRAPHIC EFFECT -->
+  <div class="effect-card">
+    <div class="effect-demo demo-holo-bg">
+      <div class="holo-card">⚡</div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Holographic Effect</div>
+      <div class="effect-desc">Gradiente arco-íris animado com <code>background-size: 400%</code> e sweep de brilho em pseudo-elemento.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+  <!-- 13 METALLIC UI -->
+  <div class="effect-card">
+    <div class="effect-demo demo-metal-bg">
+      <div class="metal-card">Aço Inox<br><small style="font-weight:400;font-size:11px;opacity:.7">Superfície metálica CSS</small></div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+        <span class="metal-badge">🏅 OURO</span>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Metallic UI</div>
+      <div class="effect-desc">Superfícies metálicas via gradiente linear multiparada simulando reflexo de luz.</div>
+      <span class="effect-tag">CSS gradient</span>
+    </div>
+  </div>
+
+  <!-- 14 LIQUID UI -->
+  <div class="effect-card">
+    <div class="effect-demo demo-liquidui-bg">
+      <button class="liquid-btn lb-blue">Despachar Equipe</button>
+      <button class="liquid-btn lb-pink">Emergência</button>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Liquid UI</div>
+      <div class="effect-desc">Botões e cards com borda totalmente arredondada, gradiente e reflexo radial dinâmico no hover.</div>
+      <span class="effect-tag">CSS + JS mouse</span>
+    </div>
+  </div>
+
+  <!-- 15 GRADIENT BORDER -->
+  <div class="effect-card">
+    <div class="effect-demo demo-gradborder-bg">
+      <div class="grad-border-card">
+        <div class="grad-border-inner"><span>🗺️</span>Regional</div>
+      </div>
+      <div class="grad-border-card">
+        <div class="grad-border-inner"><span>📡</span>BSC</div>
+      </div>
+      <button class="grad-btn"><span class="grad-btn-inner">Ver Equipes</span></button>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Gradient Border</div>
+      <div class="effect-desc">Borda em gradiente animada via wrapper com <code>padding: 2px</code> e background de gradiente giratório.</div>
+      <span class="effect-tag">CSS gradient + animation</span>
+    </div>
+  </div>
+
+  <!-- 16 GRADIENT ANIMATION -->
+  <div class="effect-card">
+    <div class="effect-demo demo-gradanim-bg">
+      <div class="gradanim-text">GRADIENTE VIVO</div>
+      <div class="gradanim-sub">background-position animado infinitamente</div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Gradient Animation</div>
+      <div class="effect-desc"><code>background-size: 400%</code> com <code>@keyframes</code> alternando <code>background-position</code> suavemente.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Liquid button mouse tracking
+document.querySelectorAll('.liquid-btn').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+    const y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+    btn.style.setProperty('--mx', x + '%');
+    btn.style.setProperty('--my', y + '%');
+  });
+});
+</script>
+{% endblock %}

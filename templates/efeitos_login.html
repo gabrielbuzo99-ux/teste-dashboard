@@ -1,0 +1,554 @@
+{% extends 'base.html' %}
+{% block title %}Efeitos Premium Login — Copel Despacho{% endblock %}
+{% block page_title %}Efeitos Premium para Login{% endblock %}
+{% block page_meta %}<span class="badge-date">9 efeitos demonstrados</span>{% endblock %}
+
+{% block content %}
+<style>
+/* shared login-demo shell */
+.ldemo { width:100%; min-height:240px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; border-radius:10px 10px 0 0; background:#0a0e17; }
+
+/* ══════════════════════════════════════════════
+   1. LOGO MORPHING
+══════════════════════════════════════════════ */
+.morph-logo-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; }
+.morph-logo {
+  width:80px; height:80px; position:relative;
+}
+.morph-logo svg { width:100%; height:100%; }
+.morph-path { fill:none; stroke:url(#morph-grad); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+#morph-shape { animation:morph-shape-anim 4s ease-in-out infinite; }
+@keyframes morph-shape-anim {
+  0%,100% { d:path("M40 10 L70 25 L70 55 L40 70 L10 55 L10 25 Z"); }
+  25%      { d:path("M40 5 L75 30 L65 65 L40 75 L15 65 L5 30 Z"); }
+  50%      { d:path("M40 10 C70 10 75 40 40 70 C5 40 10 10 40 10 Z"); }
+  75%      { d:path("M40 8 L68 22 L72 55 L40 72 L8 55 L12 22 Z"); }
+}
+.morph-icon {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:32px; animation:morph-icon-spin 8s linear infinite;
+}
+@keyframes morph-icon-spin { to { transform:rotate(360deg); } }
+.morph-label { font-size:14px; font-weight:700; color:#e2e8f0; letter-spacing:.08em; }
+.morph-sub   { font-size:11px; color:#64748b; }
+
+/* ══════════════════════════════════════════════
+   2. SVG MORPH ANIMATION
+══════════════════════════════════════════════ */
+.svg-morph-demo { display:flex; align-items:center; justify-content:center; gap:32px; }
+.svg-morph-shape { width:100px; height:100px; }
+.svg-morph-path  { transition:d .8s cubic-bezier(.68,-.55,.27,1.55); }
+
+/* ══════════════════════════════════════════════
+   3. ENERGY FLOW ANIMATION
+══════════════════════════════════════════════ */
+.energy-svg { width:220px; height:160px; }
+.energy-path { fill:none; stroke-width:2; stroke-linecap:round; }
+.e-line-1 { stroke:#3b82f6; stroke-dasharray:200; stroke-dashoffset:200; animation:energy-flow 2s linear infinite; }
+.e-line-2 { stroke:#14b8a6; stroke-dasharray:200; stroke-dashoffset:200; animation:energy-flow 2s linear infinite .4s; }
+.e-line-3 { stroke:#a855f7; stroke-dasharray:200; stroke-dashoffset:200; animation:energy-flow 2s linear infinite .8s; }
+@keyframes energy-flow { to { stroke-dashoffset:-200; } }
+.energy-node { animation:energy-node-pulse 1.5s ease-in-out infinite; }
+@keyframes energy-node-pulse {
+  0%,100% { r:5; opacity:.7; }
+  50%      { r:8; opacity:1; }
+}
+
+/* ══════════════════════════════════════════════
+   4. CIRCUIT ANIMATION
+══════════════════════════════════════════════ */
+.circuit-svg { width:240px; height:180px; }
+.circuit-line { fill:none; stroke:#22c55e; stroke-width:1.5; stroke-dasharray:300; stroke-dashoffset:300; }
+.circuit-line.c1 { animation:circuit-draw 2s ease-in-out infinite; }
+.circuit-line.c2 { animation:circuit-draw 2s ease-in-out infinite .3s; }
+.circuit-line.c3 { animation:circuit-draw 2s ease-in-out infinite .6s; }
+.circuit-line.c4 { animation:circuit-draw 2s ease-in-out infinite .9s; }
+@keyframes circuit-draw {
+  0%   { stroke-dashoffset:300; opacity:0; }
+  20%  { opacity:1; }
+  60%  { stroke-dashoffset:0; opacity:1; }
+  80%  { stroke-dashoffset:0; opacity:.3; }
+  100% { stroke-dashoffset:0; opacity:0; }
+}
+.circuit-node { fill:#22c55e; animation:circuit-node-blink 2s ease-in-out infinite; }
+.circuit-node.cn2 { animation-delay:.4s; fill:#3b82f6; }
+.circuit-node.cn3 { animation-delay:.8s; fill:#a855f7; }
+@keyframes circuit-node-blink {
+  0%,100% { opacity:.3; r:4; }
+  50%      { opacity:1; r:6; filter:drop-shadow(0 0 6px currentColor); }
+}
+.circuit-chip { fill:rgba(34,197,94,.1); stroke:#22c55e; stroke-width:1; animation:chip-glow 2s ease-in-out infinite; }
+@keyframes chip-glow {
+  0%,100% { fill:rgba(34,197,94,.05); }
+  50%      { fill:rgba(34,197,94,.2); }
+}
+
+/* ══════════════════════════════════════════════
+   5. PARTICLE MORPHING
+══════════════════════════════════════════════ */
+.morph-canvas { width:100%; height:220px; display:block; border-radius:10px 10px 0 0; }
+
+/* ══════════════════════════════════════════════
+   6. LIGHT SWEEP EFFECT
+══════════════════════════════════════════════ */
+.sweep-card {
+  width:200px; padding:24px 32px;
+  background:linear-gradient(135deg,#1e3a5f,#0f2744);
+  border:1px solid rgba(59,130,246,.3);
+  border-radius:16px;
+  text-align:center;
+  color:#fff;
+  position:relative; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+.sweep-card::before {
+  content:'';
+  position:absolute;
+  top:-100%; left:-100%;
+  width:60%; height:300%;
+  background:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.5) 50%, rgba(255,255,255,.1) 60%, transparent 70%);
+  animation:sweep-shine 3s ease-in-out infinite;
+  transform:skewX(-20deg);
+}
+@keyframes sweep-shine {
+  0%   { left:-100%; opacity:0; }
+  10%  { opacity:1; }
+  50%  { left:200%; }
+  51%,100% { left:-100%; opacity:0; }
+}
+.sweep-icon { font-size:36px; margin-bottom:10px; }
+.sweep-title { font-size:16px; font-weight:700; }
+.sweep-sub   { font-size:11px; opacity:.6; margin-top:4px; }
+
+/* ══════════════════════════════════════════════
+   7. SHIMMER EFFECT
+══════════════════════════════════════════════ */
+.shimmer-demo { display:flex; flex-direction:column; gap:12px; width:90%; }
+.shimmer-line {
+  height:16px; border-radius:8px;
+  background:linear-gradient(90deg, var(--bg3) 25%, var(--border2) 50%, var(--bg3) 75%);
+  background-size:300% 100%;
+  animation:shimmer-run 1.8s ease-in-out infinite;
+}
+.shimmer-line.sl-full  { width:100%; }
+.shimmer-line.sl-med   { width:75%; }
+.shimmer-line.sl-short { width:50%; }
+.shimmer-circle {
+  width:56px; height:56px; border-radius:50%;
+  background:linear-gradient(90deg, var(--bg3) 25%, var(--border2) 50%, var(--bg3) 75%);
+  background-size:300% 100%;
+  animation:shimmer-run 1.8s ease-in-out infinite;
+  flex-shrink:0;
+}
+.shimmer-row  { display:flex; align-items:center; gap:12px; }
+.shimmer-lines-stack { flex:1; display:flex; flex-direction:column; gap:8px; }
+@keyframes shimmer-run { to { background-position:-200% center; } }
+
+/* ══════════════════════════════════════════════
+   8. LOADING SKELETON
+══════════════════════════════════════════════ */
+.skeleton-demo { display:flex; flex-direction:column; gap:14px; width:90%; }
+.skeleton-card-mock {
+  background:var(--bg3); border:1px solid var(--border); border-radius:10px; padding:14px; display:flex; flex-direction:column; gap:10px;
+}
+.skel {
+  border-radius:6px;
+  background:linear-gradient(90deg, var(--bg3) 25%, rgba(255,255,255,.06) 50%, var(--bg3) 75%);
+  background-size:400% 100%;
+  animation:skel-wave 1.4s ease-in-out infinite;
+}
+.skel-title  { height:14px; width:60%; }
+.skel-line1  { height:11px; width:100%; animation-delay:.1s; }
+.skel-line2  { height:11px; width:85%; animation-delay:.2s; }
+.skel-badge  { height:22px; width:80px; border-radius:20px; animation-delay:.15s; }
+.skel-header { display:flex; justify-content:space-between; align-items:center; }
+@keyframes skel-wave {
+  to { background-position:-200% center; }
+}
+
+/* ══════════════════════════════════════════════
+   9. LOTTIE / SVG ANIMATION
+══════════════════════════════════════════════ */
+.lottie-demo { display:flex; flex-direction:column; align-items:center; gap:20px; }
+.lottie-svg-wrap { position:relative; width:140px; height:140px; }
+.lottie-circle-bg {
+  fill:none; stroke:#1e3a5f; stroke-width:6;
+}
+.lottie-circle-prog {
+  fill:none; stroke:url(#lottie-grad); stroke-width:6;
+  stroke-linecap:round;
+  stroke-dasharray:339.3; /* 2πr where r=54 */
+  stroke-dashoffset:339.3;
+  transform:rotate(-90deg);
+  transform-origin:70px 70px;
+  animation:lottie-fill 3s cubic-bezier(.4,0,.2,1) infinite;
+}
+@keyframes lottie-fill {
+  0%   { stroke-dashoffset:339.3; }
+  70%  { stroke-dashoffset:0; }
+  90%  { stroke-dashoffset:0; }
+  100% { stroke-dashoffset:339.3; }
+}
+.lottie-icon-wrap {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:40px;
+  animation:lottie-icon-pop 3s ease-in-out infinite;
+}
+@keyframes lottie-icon-pop {
+  0%,10% { transform:scale(.6); opacity:.3; }
+  40%    { transform:scale(1.1); opacity:1; }
+  80%    { transform:scale(1); opacity:1; }
+  90%,100%{ transform:scale(.6); opacity:.3; }
+}
+.lottie-label-row { text-align:center; color:#e2e8f0; }
+.lottie-label { font-size:15px; font-weight:700; }
+.lottie-sub   { font-size:11px; color:#64748b; margin-top:3px; }
+</style>
+
+<div class="effects-grid">
+
+  <!-- 1. LOGO MORPHING -->
+  <div class="effect-card">
+    <div class="ldemo" style="background:linear-gradient(135deg,#0f1623,#1a2540)">
+      <div class="morph-logo-wrap">
+        <div class="morph-logo">
+          <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="morph-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#14b8a6"/>
+              </linearGradient>
+            </defs>
+            <path id="morph-shape" class="morph-path" d="M40 10 L70 25 L70 55 L40 70 L10 55 L10 25 Z"/>
+          </svg>
+          <div class="morph-icon">⚡</div>
+        </div>
+        <div class="morph-label">COPEL</div>
+        <div class="morph-sub">Logo Morphing</div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Logo Morphing</div>
+      <div class="effect-desc">Logo SVG se transforma entre formas diferentes via <code>@keyframes</code> com interpolação nativa de <code>path d()</code>.</div>
+      <span class="effect-tag">CSS SVG path animation</span>
+    </div>
+  </div>
+
+  <!-- 2. SVG MORPH ANIMATION -->
+  <div class="effect-card">
+    <div class="ldemo" style="background:#0a0e17;gap:24px">
+      <svg class="svg-morph-shape" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="sm-g1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#ec4899"/>
+          </linearGradient>
+        </defs>
+        <path id="sm-path-1" fill="url(#sm-g1)" d="M50 10 L90 35 L90 65 L50 90 L10 65 L10 35 Z"/>
+      </svg>
+      <div style="text-align:center;color:#e2e8f0">
+        <div style="font-size:13px;font-weight:600;margin-bottom:12px">Transformar →</div>
+        <button onclick="toggleSVGMorph()" class="smooth-nav" style="font-size:12px">Morfar</button>
+      </div>
+      <svg class="svg-morph-shape" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="sm-g2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#14b8a6"/>
+          </linearGradient>
+        </defs>
+        <path id="sm-path-2" class="svg-morph-path" fill="url(#sm-g2)" d="M50 10 C90 10 90 90 50 90 C10 90 10 10 50 10 Z"/>
+      </svg>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">SVG Morph Animation</div>
+      <div class="effect-desc">Vetores mudam de forma suavemente: polígono ↔ círculo via <code>transition: d .8s cubic-bezier()</code> acionada por JS.</div>
+      <span class="effect-tag">CSS transition + JS</span>
+    </div>
+  </div>
+
+  <!-- 3. ENERGY FLOW ANIMATION -->
+  <div class="effect-card">
+    <div class="ldemo" style="background:#050a14">
+      <svg class="energy-svg" viewBox="0 0 220 160">
+        <defs>
+          <filter id="e-glow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- grid lines bg -->
+        <line x1="0" y1="80" x2="220" y2="80" stroke="rgba(59,130,246,.1)" stroke-width="1"/>
+        <line x1="110" y1="0" x2="110" y2="160" stroke="rgba(59,130,246,.1)" stroke-width="1"/>
+        <!-- energy paths -->
+        <path class="energy-path e-line-1" d="M10 80 Q55 30 110 80 Q165 130 210 80" filter="url(#e-glow)"/>
+        <path class="energy-path e-line-2" d="M10 80 Q55 50 110 80 Q165 110 210 80" filter="url(#e-glow)"/>
+        <path class="energy-path e-line-3" d="M10 80 Q55 120 110 80 Q165 40 210 80" filter="url(#e-glow)"/>
+        <!-- nodes -->
+        <circle class="energy-node" cx="10"  cy="80" r="5" fill="#3b82f6" filter="url(#e-glow)"/>
+        <circle class="energy-node" cx="110" cy="80" r="5" fill="#14b8a6" filter="url(#e-glow)" style="animation-delay:.5s"/>
+        <circle class="energy-node" cx="210" cy="80" r="5" fill="#a855f7" filter="url(#e-glow)" style="animation-delay:1s"/>
+        <!-- labels -->
+        <text x="10"  y="100" font-size="9" fill="#64748b" text-anchor="middle">FONTE</text>
+        <text x="110" y="100" font-size="9" fill="#64748b" text-anchor="middle">BSC</text>
+        <text x="210" y="100" font-size="9" fill="#64748b" text-anchor="middle">CAMPO</text>
+      </svg>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Energy Flow Animation</div>
+      <div class="effect-desc">Fluxos de energia via <code>stroke-dasharray/offset</code> animados em sequência, com filtro <code>feGaussianBlur</code> para glow.</div>
+      <span class="effect-tag">CSS SVG stroke-dash</span>
+    </div>
+  </div>
+
+  <!-- 4. CIRCUIT ANIMATION -->
+  <div class="effect-card">
+    <div class="ldemo" style="background:#020d06">
+      <svg class="circuit-svg" viewBox="0 0 240 180">
+        <defs>
+          <filter id="c-glow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- chip -->
+        <rect class="circuit-chip" x="90" y="65" width="60" height="50" rx="4" filter="url(#c-glow)"/>
+        <text x="120" y="95" font-size="9" fill="#22c55e" text-anchor="middle" filter="url(#c-glow)">CPU</text>
+        <!-- circuit lines -->
+        <path class="circuit-line c1" d="M 30 90 H 90" filter="url(#c-glow)"/>
+        <path class="circuit-line c2" d="M 150 90 H 210" filter="url(#c-glow)"/>
+        <path class="circuit-line c3" d="M 120 65 V 20 H 180 V 50" filter="url(#c-glow)"/>
+        <path class="circuit-line c4" d="M 120 115 V 155 H 60 V 130" filter="url(#c-glow)"/>
+        <!-- extra traces -->
+        <path class="circuit-line" d="M 30 90 V 50 H 60" stroke="#3b82f6" style="animation-delay:.5s" filter="url(#c-glow)"/>
+        <path class="circuit-line" d="M 30 90 V 130" stroke="#a855f7" style="animation-delay:1s" filter="url(#c-glow)"/>
+        <!-- nodes -->
+        <circle class="circuit-node"     cx="30"  cy="90"  r="4" filter="url(#c-glow)"/>
+        <circle class="circuit-node cn2" cx="210" cy="90"  r="4" filter="url(#c-glow)"/>
+        <circle class="circuit-node cn3" cx="180" cy="50"  r="4" filter="url(#c-glow)"/>
+        <circle class="circuit-node"     cx="60"  cy="130" r="4" filter="url(#c-glow)" style="animation-delay:.6s"/>
+      </svg>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Circuit Animation</div>
+      <div class="effect-desc">Circuito eletrônico energizando via <code>stroke-dashoffset</code> escalonado com filtro SVG de glow verde.</div>
+      <span class="effect-tag">CSS SVG + filter</span>
+    </div>
+  </div>
+
+  <!-- 5. PARTICLE MORPHING -->
+  <div class="effect-card" style="grid-column:span 2">
+    <div class="ldemo" style="padding:0;display:block">
+      <canvas class="morph-canvas" id="morph-canvas"></canvas>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Particle Morphing</div>
+      <div class="effect-desc">Partículas se reorganizam formando símbolos (⚡ → ✦ → ◉): cada partícula interpola sua posição para o destino via Canvas 2D.</div>
+      <span class="effect-tag">JS Canvas 2D + lerp</span>
+    </div>
+  </div>
+
+  <!-- 6. LIGHT SWEEP EFFECT -->
+  <div class="effect-card">
+    <div class="ldemo" style="background:#050a14">
+      <div class="sweep-card">
+        <div class="sweep-icon">⚡</div>
+        <div class="sweep-title">COPEL</div>
+        <div class="sweep-sub">Despacho de Equipes</div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Light Sweep Effect</div>
+      <div class="effect-desc">Reflexo de luz deslizando: pseudo-elemento com gradiente em ângulo animado via <code>left: -100% → 200%</code>.</div>
+      <span class="effect-tag">CSS ::before animation</span>
+    </div>
+  </div>
+
+  <!-- 7. SHIMMER EFFECT -->
+  <div class="effect-card">
+    <div class="ldemo" style="flex-direction:column;padding:20px;background:var(--bg2)">
+      <div class="shimmer-demo">
+        <div class="shimmer-row">
+          <div class="shimmer-circle"></div>
+          <div class="shimmer-lines-stack">
+            <div class="shimmer-line sl-full"></div>
+            <div class="shimmer-line sl-med"></div>
+          </div>
+        </div>
+        <div class="shimmer-line sl-full"></div>
+        <div class="shimmer-line sl-med"></div>
+        <div class="shimmer-line sl-short"></div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Shimmer Effect</div>
+      <div class="effect-desc">Brilho correndo pela superfície: gradiente <code>background-position</code> animado da esquerda para direita em loop.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+  <!-- 8. LOADING SKELETON -->
+  <div class="effect-card">
+    <div class="ldemo" style="flex-direction:column;padding:16px;background:var(--bg2)">
+      <div class="skeleton-demo">
+        <div class="skeleton-card-mock">
+          <div class="skel-header">
+            <div class="skel skel-title"></div>
+            <div class="skel skel-badge"></div>
+          </div>
+          <div class="skel skel-line1"></div>
+          <div class="skel skel-line2"></div>
+        </div>
+        <div class="skeleton-card-mock">
+          <div class="skel-header">
+            <div class="skel skel-title"></div>
+            <div class="skel skel-badge"></div>
+          </div>
+          <div class="skel skel-line1"></div>
+          <div class="skel skel-line2"></div>
+        </div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Loading Skeleton</div>
+      <div class="effect-desc">Estrutura fantasma pulsante exibida enquanto o conteúdo carrega: ondas via <code>background-position</code> com offset escalonado.</div>
+      <span class="effect-tag">CSS animation</span>
+    </div>
+  </div>
+
+  <!-- 9. LOTTIE ANIMATION -->
+  <div class="effect-card">
+    <div class="ldemo" style="background:linear-gradient(135deg,#0f1623,#1a2540)">
+      <div class="lottie-demo">
+        <div class="lottie-svg-wrap">
+          <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" width="140" height="140">
+            <defs>
+              <linearGradient id="lottie-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stop-color="#3b82f6"/>
+                <stop offset="50%"  stop-color="#8b5cf6"/>
+                <stop offset="100%" stop-color="#14b8a6"/>
+              </linearGradient>
+            </defs>
+            <circle class="lottie-circle-bg" cx="70" cy="70" r="54"/>
+            <circle class="lottie-circle-prog" cx="70" cy="70" r="54"/>
+            <!-- tick mark -->
+            <g id="lottie-tick" style="opacity:0;animation:lottie-tick-show 3s ease-in-out infinite">
+              <path d="M50 70 L63 83 L90 56" fill="none" stroke="url(#lottie-grad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                stroke-dasharray="60" stroke-dashoffset="60" style="animation:lottie-tick-draw 3s ease-in-out infinite"/>
+            </g>
+          </svg>
+          <div class="lottie-icon-wrap">⚡</div>
+        </div>
+        <div class="lottie-label-row">
+          <div class="lottie-label">Autenticando...</div>
+          <div class="lottie-sub">Verificando credenciais</div>
+        </div>
+      </div>
+    </div>
+    <div class="effect-info">
+      <div class="effect-name">Lottie Animation</div>
+      <div class="effect-desc">Animação vetorial de progresso em anel com gradiente, ícone emergindo e indicador de carregamento — tudo em SVG + CSS puro.</div>
+      <span class="effect-tag">CSS SVG animation</span>
+    </div>
+  </div>
+
+</div>
+
+<style>
+/* Lottie tick */
+@keyframes lottie-tick-show { 0%,30% { opacity:0; } 50%,90% { opacity:1; } 100% { opacity:0; } }
+@keyframes lottie-tick-draw { 0%,30% { stroke-dashoffset:60; } 70%,90% { stroke-dashoffset:0; } 100% { stroke-dashoffset:60; } }
+/* reuse smooth-nav from movement page */
+.smooth-nav {
+  padding:6px 14px; border-radius:6px; border:1px solid var(--border2);
+  background:var(--bg3); color:var(--text2); font-size:12px;
+  cursor:pointer; font-family:var(--font); transition:background .15s,color .15s;
+}
+.smooth-nav:hover { background:var(--blue-dim); color:var(--blue); border-color:rgba(59,130,246,.3); }
+</style>
+
+<script>
+/* ── SVG MORPH TOGGLE ── */
+let morphed = false;
+function toggleSVGMorph() {
+  const p = document.getElementById('sm-path-2');
+  if(!p) return;
+  morphed = !morphed;
+  p.setAttribute('d', morphed
+    ? 'M50 10 L90 50 L70 90 L30 90 L10 50 Z'
+    : 'M50 10 C90 10 90 90 50 90 C10 90 10 10 50 10 Z'
+  );
+}
+
+/* ── PARTICLE MORPHING CANVAS ── */
+(function(){
+  const canvas = document.getElementById('morph-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth, H = 220;
+  canvas.width = W; canvas.height = H;
+
+  const N = 120;
+  const shapes = [
+    // BOLT ⚡ (simplified as points)
+    () => {
+      const pts = [];
+      for(let i=0;i<N;i++){
+        const t = i/N;
+        // distribute along bolt shape
+        const seg = Math.floor(t*4);
+        let x,y;
+        if(seg===0){x=W/2-20+t*4*30;y=H/2-60+t*4*40;}
+        else if(seg===1){x=W/2+10-(t*4-1)*40;y=H/2-20+(t*4-1)*20;}
+        else if(seg===2){x=W/2-30+(t*4-2)*40;y=H/2+(t*4-2)*30;}
+        else{x=W/2+10-(t*4-3)*30;y=H/2+30+(t*4-3)*30;}
+        pts.push({x:x+(Math.random()-0.5)*8,y:y+(Math.random()-0.5)*8});
+      }
+      return pts;
+    },
+    // CIRCLE
+    () => Array.from({length:N},(_,i)=>{
+      const a=i/N*Math.PI*2, r=55+Math.random()*10;
+      return {x:W/2+Math.cos(a)*r, y:H/2+Math.sin(a)*r};
+    }),
+    // STAR
+    () => Array.from({length:N},(_,i)=>{
+      const a=i/N*Math.PI*2;
+      const r=(i%2===0?60:25)+Math.random()*8;
+      return {x:W/2+Math.cos(a)*r, y:H/2+Math.sin(a)*r};
+    })
+  ];
+
+  let shapeIdx=0;
+  let targets=shapes[0]();
+  const particles = Array.from({length:N},(_,i)=>({
+    x:W/2+(Math.random()-0.5)*200,
+    y:H/2+(Math.random()-0.5)*100,
+    hue:200+Math.floor(i/N*120)
+  }));
+
+  function lerp(a,b,t){return a+(b-a)*t;}
+
+  setInterval(()=>{
+    shapeIdx=(shapeIdx+1)%shapes.length;
+    targets=shapes[shapeIdx]();
+  },2200);
+
+  function draw(){
+    ctx.fillStyle='rgba(5,10,20,.18)';
+    ctx.fillRect(0,0,W,H);
+    particles.forEach((p,i)=>{
+      p.x=lerp(p.x,targets[i].x,.06);
+      p.y=lerp(p.y,targets[i].y,.06);
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,2.5,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${p.hue},90%,65%,.9)`;
+      ctx.shadowColor=`hsla(${p.hue},90%,65%,1)`;
+      ctx.shadowBlur=6;
+      ctx.fill();
+    });
+    ctx.shadowBlur=0;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+{% endblock %}
